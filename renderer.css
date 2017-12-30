@@ -1,0 +1,54 @@
+#steam-folder-error {
+  color: darkred;
+}
+
+#dota-server-container {
+  margin: 2em 0;
+}
+
+#steam-path,
+#steam-path-label {
+  display: inline-block;
+}
+
+#steam-path {
+  margin: 0.5em 0;
+  border-radius: 4px;
+  border: 2px solid grey;
+  padding: 0.35em 0.5em;
+}
+
+#server-running-msg {
+  margin: 0.5em 0;
+  border-radius: 4px;
+  border: 2px solid green;
+  background-color: lightgreen;
+  padding: 0.35em 0.5em;
+}
+
+#dota-server-container.running #stop-server-container,
+#dota-server-container #start-server-container {
+  display: block;
+}
+
+#dota-server-container #stop-server-container,
+#dota-server-container.running #start-server-container {
+  display: none;
+}
+
+#steam-configuration #steam-folder-error,
+#steam-configuration #steam-path-set {
+  display: none;
+}
+
+#steam-configuration.path-set #steam-path-set {
+  display: block;
+}
+
+#steam-configuration.path-set #steam-path-not-set {
+  display: none;
+}
+
+#steam-configuration.has-error #steam-folder-error {
+  display: block;
+}

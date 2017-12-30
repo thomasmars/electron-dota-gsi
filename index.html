@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Dota talents extension client</title>
+  <link href="renderer.css" rel="stylesheet">
+</head>
+<body>
+<h1>Dota talents extension</h1>
+<!-- All of the Node.js APIs are available in this renderer process. -->
+<div id="steam-configuration">
+  <div id="steam-path-set">
+    <div id="steam-path-container">
+      <div id="steam-path-label">Steam path:</div>
+      <div id="steam-path"></div>
+    </div>
+    <button id="clean-up-steam">Clear settings</button>
+  </div>
+  <div id="steam-path-not-set">
+    <button id="configure-steam">Configure path</button>
+  </div>
+  <div id="steam-folder-error">
+    ERROR: The selected directory is not a valid Steam directory or does not contain
+    valid Dota 2 files. Please check that the folder you selected is the same as in
+    your Dota 2 properties and contains the following directories:
+    "steamapps/common/dota 2 beta/game/dota/cfg". To see the directory of your Dota
+    installation go to the Steam client, right click Dota, select properties and
+    find the directory through "LOCAL FILES" -> "BROWSE LOCAL FILES".
+  </div>
+</div>
+<div id="dota-server-container">
+  <div id="stop-server-container">
+    <div id="server-running-msg">Dota extension service running!</div>
+  </div>
+  <div id="start-server-container">
+    <button id="start-server">Start</button>
+  </div>
+</div>
+<script>
+  // You can also require other files to run in this process
+  require('./renderer.js')
+</script>
+</body>
+</html>
