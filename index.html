@@ -2,19 +2,18 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Dota talents extension client</title>
+  <title>Dota Illuminate</title>
   <link href="renderer.css" rel="stylesheet">
 </head>
 <body>
-<h1>Dota talents extension</h1>
-<!-- All of the Node.js APIs are available in this renderer process. -->
+<h1>Dota Illuminate</h1>
 <div id="steam-configuration">
   <div id="steam-path-set">
     <div id="steam-path-container">
       <div id="steam-path-label">Steam path:</div>
       <div id="steam-path"></div>
     </div>
-    <button id="clean-up-steam">Clear settings</button>
+    <button id="clean-up-steam">Clear path</button>
   </div>
   <div id="steam-path-not-set">
     <button id="configure-steam">Configure path</button>
@@ -26,6 +25,21 @@
     "steamapps/common/dota 2 beta/game/dota/cfg". To see the directory of your Dota
     installation go to the Steam client, right click Dota, select properties and
     find the directory through "LOCAL FILES" -> "BROWSE LOCAL FILES".
+  </div>
+</div>
+<div id="twitch-connection-container">
+  <div id="twitch-broadcaster-container">
+    <label id="twitch-broadcaster-label">Twitch token:
+      <textarea id="twitch-broadcaster-id"></textarea>
+    </label>
+  </div>
+  <div id="twitch-connection-error">Could not connect with Twitch, try updating your token.</div>
+  <div id="twitch-info-set">
+    <button id="twitch-broadcaster-cleanup">Clear token</button>
+  </div>
+  <div id="twitch-info-not-set">
+    <button id="twitch-connection-button">Connect with Twitch</button>
+    <div id="twitch-connection-description">Input the token found on the config page of the Twitch extension.</div>
   </div>
 </div>
 <div id="dota-server-container">

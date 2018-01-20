@@ -1,3 +1,7 @@
+body {
+  max-width: 32em;
+}
+
 #steam-folder-error {
   color: darkred;
 }
@@ -6,11 +10,33 @@
   margin: 2em 0;
 }
 
-#steam-path,
-#steam-path-label {
+#steam-configuration,
+#twitch-connection-container {
+  margin: 1em 0;
+}
+
+#twitch-connection-description {
+  font-size: 14px;
+  margin: 0.5em 0;
+}
+
+#steam-path {
   display: inline-block;
 }
 
+#steam-path-label,
+#twitch-broadcaster-id,
+#twitch-broadcaster-label {
+  display: block;
+}
+
+#twitch-broadcaster-id {
+  width: 20em;
+  height: 8em;
+  resize: none;
+}
+
+#twitch-broadcaster-id,
 #steam-path {
   margin: 0.5em 0;
   border-radius: 4px;
@@ -19,6 +45,7 @@
 }
 
 #server-running-msg {
+  display: inline-block;
   margin: 0.5em 0;
   border-radius: 4px;
   border: 2px solid green;
@@ -51,4 +78,25 @@
 
 #steam-configuration.has-error #steam-folder-error {
   display: block;
+}
+
+#twitch-connection-container.info-set #twitch-info-set {
+  display: block;
+}
+
+#twitch-connection-container.info-set #twitch-info-not-set,
+#twitch-connection-container #twitch-info-set {
+  display: none;
+}
+
+#twitch-connection-container #twitch-connection-error {
+  display: none;
+}
+
+#twitch-connection-container.connection-error #twitch-connection-error {
+  display: block;
+}
+
+#twitch-connection-error {
+  color: darkred;
 }

@@ -13,12 +13,16 @@ const initializeGsiListener = require('./src/gsi-server/index');
 const configureSteam = document.getElementById('configure-steam');
 const clearSteamSettings = document.getElementById('clean-up-steam');
 const steamPathElement = document.getElementById('steam-path');
+const twitchConnectionButton = document.getElementById('twitch-connection-button');
+const twitchContainer = document.getElementById('twitch-connection-container');
+const twitchToken = document.getElementById('twitch-broadcaster-id');
+const twitchClearConnection = document.getElementById('twitch-broadcaster-cleanup');
 const startServerButton = document.getElementById('start-server');
 const serverContainerButton = document.getElementById('dota-server-container');
-const steamConfigurationContainer = document.getElementById(
-  'steam-configuration'
-);
+const steamConfigurationContainer = document.getElementById('steam-configuration');
+
 let steamPath = store.get('steamPath');
+let broadcasterToken = store.get('broadcasterToken');
 let server;
 
 // Config specific file/dir names
@@ -33,9 +37,26 @@ const cfgFolders = [
 ];
 const gsiCfgFileName = 'gamestate_integration_test.cfg';
 
+
+function connectWithTwitch() {
+  twitchContainer.classList.add('info-set');
+  twitchContainer.classList.remove('connection-error');
+  startServerButton.disabled = !(steamPath && broadcasterToken);
+  twitchToken.disabled = true;
+}
+
+function clearTwitchConnection() {
+  twitchContainer.classList.remove('info-set');
+  twitchContainer.classList.remove('connection-error');
+  twitchToken.innerText = '';
+  startServerButton.disabled = !(steamPath && broadcasterToken);
+  twitchToken.disabled = false;
+}
+
 function showPath() {
   steamConfigurationContainer.classList.add('path-set');
   clearErrors();
+  startServerButton.disabled = !(steamPath && broadcasterToken);
 }
 
 function hidePath() {
@@ -61,6 +82,7 @@ function hidePath() {
   // Remove from store
   store.delete('steamPath');
   steamPath = store.get('steamPath');
+  startServerButton.disabled = !(steamPath && broadcasterToken);
   clearErrors();
 }
 
@@ -80,12 +102,30 @@ clearSteamSettings.addEventListener('click', () => {
   hidePath();
 });
 
+twitchConnectionButton.addEventListener('click', () => {
+  broadcasterToken = twitchToken.value;
+  store.set('broadcasterToken', broadcasterToken);
+  twitchToken.innerText = broadcasterToken;
+  connectWithTwitch();
+});
+
+twitchClearConnection.addEventListener('click', () => {
+  store.delete('broadcasterToken');
+  broadcasterToken = store.get('broadcasterToken');
+  clearTwitchConnection();
+});
+
 startServerButton.addEventListener('click', () => {
   // Always update DB definitions first, so they are up to date
   generateDbFiles();
 
   // Initialize server here.
-  server = initializeGsiListener();
+  setTimeout(() => {
+    server = initializeGsiListener(broadcasterToken, () => {
+      // On error let user know that token must be updated
+      twitchContainer.classList.add('connection-error');
+    });
+  }, 5000);
 
   // Show that Server is running
   // Make it possible to stop server
@@ -121,4 +161,9 @@ ipc.on('selected-directory', (event, selectedPaths) => {
 if (steamPath) {
   steamPathElement.innerHTML = steamPath;
   showPath();
+}
+
+if (broadcasterToken) {
+  twitchToken.innerText = broadcasterToken;
+  connectWithTwitch();
 }
