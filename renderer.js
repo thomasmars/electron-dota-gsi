@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const Store = require('electron-store');
 const store = new Store();
+const axios = require('axios');
 const generateDbFiles = require('./src/DbGenerator');
 const initializeGsiListener = require('./src/gsi-server/index');
 
@@ -167,3 +168,9 @@ if (broadcasterToken) {
   twitchToken.innerText = broadcasterToken;
   connectWithTwitch();
 }
+
+// Un-register broadcaster when exiting
+const dotaIlluminateBackend = 'https://www.dotailluminate.pro';
+window.onbeforeunload = () => {
+  axios.post(`${dotaIlluminateBackend}/byebye`, { token: broadcasterToken });
+};
