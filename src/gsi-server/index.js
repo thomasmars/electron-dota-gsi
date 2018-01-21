@@ -12,6 +12,7 @@ let connectionFailedCallback = null;
 const dotaIlluminateBackend = 'https://www.dotailluminate.pro';
 
 function dispatchGameState(gameState) {
+  console.log("dispatching gamestate", gameState);
   axios.post(
     `${dotaIlluminateBackend}/hello`,
     Object.assign(gameState, { token: token })
@@ -48,7 +49,7 @@ const initializeGsiListener = function(ebsToken, onError) {
         });
       }
     });
-// Wrong docs ?
+
     client.on('map:game_state', (state) => {
       const isLive = state === "DOTA_GAMERULES_STATE_PRE_GAME" ||
         state === "DOTA_GAMERULES_STATE_GAME_IN_PROGRESS";
