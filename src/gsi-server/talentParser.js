@@ -1,8 +1,9 @@
 const fs = require('fs');
 const filePrefix = 'dota_db/';
-const npcHeroes = JSON.parse(fs.readFileSync(`${filePrefix}npc_heroes.json`, 'utf8'));
 
 function getTalents(heroName) {
+  // Do not try to read file before calling function, because it may not be created yet.
+  const npcHeroes = JSON.parse(fs.readFileSync(`${filePrefix}npc_heroes.json`, 'utf8'));
   const hero = npcHeroes.DOTAHeroes[heroName];
   const talentIds = [];
 

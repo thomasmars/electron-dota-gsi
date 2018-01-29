@@ -4,8 +4,8 @@ const fs = require('fs');
 const Store = require('electron-store');
 const store = new Store();
 const axios = require('axios');
-const generateDbFiles = require('./src/DbGenerator');
-const initializeGsiListener = require('./src/gsi-server/index');
+const generateDbFiles = require('./DbGenerator');
+const { initializeGsiListener, setTwitchToken } = require('./gsi-server/index');
 
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
@@ -47,6 +47,7 @@ function connectWithTwitch() {
 }
 
 function clearTwitchConnection() {
+  serverContainerButton.classList.remove('running');
   twitchContainer.classList.remove('info-set');
   twitchContainer.classList.remove('connection-error');
   twitchToken.innerText = '';
@@ -107,6 +108,7 @@ twitchConnectionButton.addEventListener('click', () => {
   broadcasterToken = twitchToken.value;
   store.set('broadcasterToken', broadcasterToken);
   twitchToken.innerText = broadcasterToken;
+  setTwitchToken(broadcasterToken);
   connectWithTwitch();
 });
 

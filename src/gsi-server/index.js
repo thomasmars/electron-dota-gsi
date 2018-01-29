@@ -8,6 +8,10 @@ let heroName = '';
 let displayTalents = false;
 let token = null;
 let connectionFailedCallback = null;
+let prevTalentsCount = null;
+
+// Singleton server, we only run it once
+let server = null;
 
 const dotaIlluminateBackend = 'https://www.dotailluminate.pro';
 
@@ -26,9 +30,14 @@ function dispatchGameState(gameState) {
 }
 
 const initializeGsiListener = function(ebsToken, onError) {
+  // Server already running
+  if (server) {
+    return;
+  }
+
   token = ebsToken;
   connectionFailedCallback = onError;
-  const server = new d2gsi();
+  server = new d2gsi();
   dispatchGameState({});
 
   server.events.on('newclient', function(client) {
@@ -92,9 +101,46 @@ const initializeGsiListener = function(ebsToken, onError) {
         // This only happens when game started.
         hasHero = false;
         displayTalents = false;
+
+        // Reset state completely
         dispatchGameState({
           displayingTalents: false,
+          talents: null,
+          chosenTalents: null,
         });
+      } else if (rawdata.hero && rawdata.hero.name) {
+        // Check if talents has changed (lowest priority)
+
+        // TODO: can't dispatch game state all the time
+        const chosenTalents = {
+          talent_1: rawdata.hero.talent_1,
+          talent_2: rawdata.hero.talent_2,
+          talent_3: rawdata.hero.talent_3,
+          talent_4: rawdata.hero.talent_4,
+          talent_5: rawdata.hero.talent_5,
+          talent_6: rawdata.hero.talent_6,
+          talent_7: rawdata.hero.talent_7,
+          talent_8: rawdata.hero.talent_8,
+        };
+
+        const talents = Object.values(chosenTalents);
+        // Talent signature is just a count of # of selected talents
+        const talentsChosenCount = talents.reduce((prev, curr) => {
+          return prev + (curr === true ? 1 : 0);
+        }, 0);
+
+        // No selected talents, do not dispatch anything
+        if (talentsChosenCount <= 0) {
+          console.log("no selected talents");
+          return;
+        }
+
+        // Check if talents chosen are different from previous.
+        if (talentsChosenCount > prevTalentsCount) {
+          // Dispatch the new chosen talents
+          dispatchGameState({ chosenTalents });
+          prevTalentsCount = talentsChosenCount;
+        }
       }
     });
   });
@@ -102,6 +148,15 @@ const initializeGsiListener = function(ebsToken, onError) {
   return server;
 };
 
+function setTwitchToken(changedToken) {
+  token = changedToken;
+
+  // Dispatch game state with new token.
+  dispatchGameState({});
+}
 
 
-module.exports = initializeGsiListener;
+module.exports = {
+  initializeGsiListener,
+  setTwitchToken
+};
